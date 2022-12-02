@@ -24,34 +24,37 @@ class Day01(Day):
     """
     Inventory = List[Calories]
 
-    elves_inventories: List[Inventory]
-
     def __init__(self):
-        self.elves_inventories = self._parse_empty_line_separated_input(lambda line: int(line))
+        self.input = self._parse_empty_line_separated_input(lambda line: int(line))
+        self.test_input = self._parse_empty_line_separated_input(lambda line: int(line), test=True)
+
+    def _get_test_1_result(self) -> int:
+        """
+        Return the expected result of the part 1 for the test file.
+
+        :return: the expected result of the part 1 for the test file.
+        """
+        return 24000
+
+    def _get_test_2_result(self) -> int:
+        """
+        Return the expected result of the part 2 for the test file.
+
+        :return: the expected result of the part 2 for the test file.
+        """
+        return 45000
 
     def _get_day(self) -> int:
+        """
+        Return the day this class is the implementation of the solution for.
+
+        :return: the day this class is the implementation of the solution for.
+        """
         return 1
 
-    def _parse_input(self) -> List[Inventory]:
-        """
-        Parse the input of Advent of code 2022 Day 01.
-
-        The input of this day is composed of a series of lines either empty or containing one number.
-        Each group of numbers separated by an empty line represent the inventory of one elf.
-        Each number represent the number of calories of a snack inside the elf inventory.
-
-        :return: The list of the inventories of each elf.
-        """
-        with open(self._get_input_name()) as input_file:
-            elf_inventories = [[]]
-            for line in input_file:
-                if len(line) > 1:
-                    elf_inventories[-1].append(int(line))
-                else:
-                    elf_inventories.append([])
-        return elf_inventories
-
-    def _get_max_inventories(self, number_of_maximum: Optional[int] = 1) -> int:
+    @staticmethod
+    def _get_max_inventories(elves_inventories: List[Inventory],
+                             number_of_maximum: Optional[int] = 1) -> int:
         """
         Calculate the sum of the number of calories in the inventory of `number_of_maximum` elves with the maximum
         calories.
@@ -65,24 +68,26 @@ class Day01(Day):
         the maximum calories.
         """
         # First we add each number of calories in the inventory of the elves.
-        summed_inventories = [sum(elf_inventory) for elf_inventory in self.elves_inventories]
+        summed_inventories = [sum(elf_inventory) for elf_inventory in elves_inventories]
         # Then we sorted by ordering the inventory with the most of the calories in front.
         total_calories_numbers = sorted(summed_inventories, reverse=True)
         # And finally we return the sum of the `number_of_maximum` inventories with the most calories.
         return sum(total_calories_numbers[:number_of_maximum])
 
-    def part_1(self) -> int:
+    def part_1(self, elves_inventories: Optional[List[Inventory]] = None) -> int:
         """
         First part of Advent of code 2022 Day 01.
 
         :return: the answer for the first part.
         """
-        return self._get_max_inventories(1)
+        elves_inventories = elves_inventories if elves_inventories is not None else self.input
+        return self._get_max_inventories(elves_inventories, 1)
 
-    def part_2(self) -> int:
+    def part_2(self, elves_inventories: Optional[List[Inventory]] = None) -> int:
         """
         Second part of Advent of code 2022 Day 01.
 
         :return: the answer for the second part.
         """
-        return self._get_max_inventories(3)
+        elves_inventories = elves_inventories if elves_inventories is not None else self.input
+        return self._get_max_inventories(elves_inventories, 3)
