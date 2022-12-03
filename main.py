@@ -38,5 +38,5 @@ def execute_current_day():
 
 
 if __name__ == '__main__':
-    # execute_current_day()
-    execute_day(1)
+    execute_current_day()
+    # execute_day(1)

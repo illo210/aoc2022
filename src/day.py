@@ -38,6 +38,25 @@ class Day:
         """
         raise NotImplementedError
 
+    def _parse_simple_list_input(self,
+                                 convert_line: Optional[Callable[[str], T]] = List[T],
+                                 test: Optional[bool] = False):
+        """
+        Parse an input file composed only of line with values.
+
+        :param convert_line: If given this function will be called on each line of value and the returned value
+            will be stocked in the parsed input instead of the line.
+        :return: A list of line.
+        """
+        file_name = self._get_input_name() if test is False else self._get_test_input_name()
+        with open(file_name) as input_file:
+            parsed_input = []
+            for line in input_file:
+                # We remove the end of lineS
+                line = line[:-1]
+                parsed_input.append(line if convert_line is None else convert_line(line))
+        return parsed_input
+
     def _parse_empty_line_separated_input(self,
                                           convert_line: Optional[Callable[[str], T]] = None,
                                           test: Optional[bool] = False) -> List[List[T]]:
